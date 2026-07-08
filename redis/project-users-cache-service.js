@@ -22,11 +22,18 @@ export async function getProjectUsers(
             projectId
         );
 
-    const cachedUsers =
-        await get(cacheKey);
+    try {
+        const cachedUsers =
+            await get(cacheKey);
 
-    if (cachedUsers) {
-        return cachedUsers;
+        if (cachedUsers) {
+            return cachedUsers;
+        }
+    } catch (error) {
+        console.error(
+            `[CACHE READ FAILED] ${cacheKey}`,
+            error
+        );
     }
 
     const projectUsers =
@@ -51,11 +58,18 @@ export async function getProjectUsers(
             })
         );
 
-    await set(
-        cacheKey,
-        users,
-        PROJECT_USERS_TTL
-    );
+    try {
+        await set(
+            cacheKey,
+            users,
+            PROJECT_USERS_TTL
+        );
+    } catch (error) {
+        console.error(
+            `[CACHE WRITE FAILED] ${cacheKey}`,
+            error
+        );
+    }
 
     return users;
 }
@@ -68,5 +82,14 @@ export async function invalidateProjectUsers(
             projectId
         );
 
-    await deleteKey(cacheKey);
+    try {
+        await deleteKey(
+            cacheKey
+        );
+    } catch (error) {
+        console.error(
+            `[CACHE INVALIDATION FAILED] ${cacheKey}`,
+            error
+        );
+    }
 }

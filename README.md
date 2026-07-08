@@ -169,3 +169,133 @@ Slack → ngrok → Node.js backend → Response → Slack
 ```
 
 ---
+
+# Prisma Setup
+
+This project uses:
+
+* PostgreSQL hosted on Neon
+* Prisma ORM
+* Prisma PostgreSQL Driver Adapter (`@prisma/adapter-pg`)
+
+## Install Dependencies
+
+Install the required packages:
+
+```bash
+npm install @prisma/client
+npm install pg
+npm install @prisma/adapter-pg
+
+npm install --save-dev prisma
+```
+
+## Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+DATABASE_URL="YOUR_DATABASE_CONNECTION_STRING"
+```
+
+## Prisma Configuration
+
+Prisma configuration is located in:
+
+```text
+prisma.config.js
+```
+
+Database client initialization is located in:
+
+```text
+services/db/prisma-client.js
+```
+
+## Generate Prisma Client
+
+Generate the Prisma Client:
+
+```bash
+npx prisma generate
+```
+
+## Verify Setup
+
+Start the application and verify that database operations execute successfully.
+
+---
+
+# Handling Schema Changes
+
+Whenever the database schema needs to be modified, follow the steps below.
+
+## Step 1: Update the Schema
+
+Modify:
+
+```text
+prisma/schema.prisma
+```
+
+Add, remove, or update the required models, fields, indexes, or relationships.
+
+## Step 2: Create and Apply a Migration
+
+Run:
+
+```bash
+npx prisma migrate dev --name <migration-name>
+```
+
+Replace:
+
+```text
+<migration-name>
+```
+
+with a short descriptive name for the schema change.
+
+Examples:
+
+```bash
+npx prisma migrate dev --name add-user-profile
+
+npx prisma migrate dev --name create-document-table
+
+npx prisma migrate dev --name update-project-schema
+```
+
+This command will:
+
+* Generate a migration
+* Apply the migration to the database
+* Update migration history
+
+## Step 3: Regenerate Prisma Client
+
+Run:
+
+```bash
+npx prisma generate
+```
+
+This ensures the Prisma Client reflects the latest schema changes.
+
+## Step 4: Restart the Application
+
+Restart the Node.js server so the updated Prisma Client is loaded.
+
+## Schema Change Workflow Summary
+
+```text
+Update schema.prisma
+        ↓
+Create migration
+        ↓
+Apply migration
+        ↓
+Generate Prisma Client
+        ↓
+Restart application
+```

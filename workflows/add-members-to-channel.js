@@ -12,6 +12,8 @@
 // 4. After the required channels exist and any requested project membership updates are complete,
 //    execute add-members-to-channels.js.
 
+// 5. Also always send user IDs to this function and NOT email ids. If the user shares email IDs, resolve them first to user IDs using tools/slack/find-user-by-email.js and then only proceed with this workflow.
+
 import validateProjectChannels from "../tools/database/channel/validate-project-channels.js";
 
 import addMembersToChannel from "../tools/slack/add-members-to-channel.js";

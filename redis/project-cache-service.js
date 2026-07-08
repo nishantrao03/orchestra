@@ -17,6 +17,8 @@ function getUserProjectsCacheKey(
 export async function getUserProjects(
     userId
 ) {
+    console.log("User ID "+userId);
+
     const cacheKey =
         getUserProjectsCacheKey(
             userId

@@ -8,6 +8,9 @@ import {
 
 const CHANNEL_PROJECT_TTL = 3600;
 
+const CACHE_NULL =
+    "__CACHE_NULL__";
+
 function getChannelProjectCacheKey(
     channelId
 ) {
@@ -26,7 +29,17 @@ export async function getChannelProject(
         const cachedProjectId =
             await get(cacheKey);
 
-        if (cachedProjectId) {
+        if (
+            cachedProjectId ===
+            CACHE_NULL
+        ) {
+            return null;
+        }
+
+        if (
+            cachedProjectId !==
+            null
+        ) {
             return cachedProjectId;
         }
     } catch (error) {
@@ -52,7 +65,8 @@ export async function getChannelProject(
     try {
         await set(
             cacheKey,
-            projectId,
+            projectId ??
+                CACHE_NULL,
             CHANNEL_PROJECT_TTL
         );
     } catch (error) {
