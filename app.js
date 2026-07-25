@@ -5,9 +5,7 @@ import express from "express";
 import slackEventsApp from "./slack/slack-events.js";
 //import redisClient from "./redis/redis-client.js";
 
-import {
-    connectRedis
-} from "./redis/redis-client.js";
+import { connectRedis } from "./redis/redis-client.js";
 
 await connectRedis();
 
@@ -46,6 +44,10 @@ app.listen(PORT, () => {
  */
 (async () => {
   try {
+
+    await connectRedis();
+
+        console.log("PING:", await (await import("./redis/redis-client.js")).default.ping());
     // const channelHistory = await getChannelHistory({ channel: SLACK_CHANNEL });
     // console.log("Channel History:", channelHistory);
 
