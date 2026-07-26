@@ -148,7 +148,7 @@
 // }
 
 import dotenv from "dotenv";
-import callGemini from "../../ai/gemini_helpers/gemini-call-helper.js";
+import callGemini from "../../ai/gemini-helpers/gemini-call-helper.js";
 import postMessageInThread from "../../tools/slack/post-message-in-thread.js";
 import buildMessages from "./messages-builder.js";
 import securityHandler from "./security-handler.js";

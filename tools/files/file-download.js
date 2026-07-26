@@ -58,10 +58,14 @@ async function processFile(
   contentArray
 ) {
   const {
-    source,
-    document_type,
-    document_name
+    source
   } = file;
+
+  let documentType =
+    file.document_type;
+
+  let documentName =
+    file.document_name;
 
   const fileLink =
     file.fileLink ??
@@ -79,24 +83,31 @@ async function processFile(
     );
   }
 
-  if (!document_type) {
-    throw new Error(
-      "document_type is required."
+  let tempFileName;
+
+  if (source === "gdrive") {
+    tempFileName =
+      `gdrive-file-${index}`;
+  } else {
+    if (!documentType) {
+      throw new Error(
+        "document_type is required."
+      );
+    }
+
+    if (!documentName) {
+      throw new Error(
+        "document_name is required."
+      );
+    }
+
+    const parsedName = path.parse(
+      documentName
     );
+
+    tempFileName =
+      `${parsedName.name}-file-${index}${parsedName.ext}`;
   }
-
-  if (!document_name) {
-    throw new Error(
-      "document_name is required."
-    );
-  }
-
-  const parsedName = path.parse(
-    document_name
-  );
-
-  const tempFileName =
-    `${parsedName.name}-file-${index}${parsedName.ext}`;
 
   const tempFilePath = path.join(
     TEMP_UPLOADS_DIR,
@@ -104,7 +115,7 @@ async function processFile(
   );
 
   console.log(
-    `[File ${index}] Started: ${document_name}`
+    `[File ${index}] Started: ${documentName ?? fileLink}`
   );
 
   try {
@@ -114,10 +125,17 @@ async function processFile(
         tempFilePath
       );
     } else if (source === "gdrive") {
-      await downloadGdriveFile(
-        fileLink,
-        tempFilePath
-      );
+      const downloadResult =
+        await downloadGdriveFile(
+          fileLink,
+          tempFilePath
+        );
+
+      documentName =
+        downloadResult.document_name;
+
+      documentType =
+        downloadResult.document_type;
     } else {
       throw new Error(
         `Unsupported source: ${source}`
@@ -125,20 +143,20 @@ async function processFile(
     }
 
     console.log(
-      `[File ${index}] Download Completed: ${document_name}`
+      `[File ${index}] Download Completed: ${documentName}`
     );
 
     const extractedContent =
       await extractFileContent(
         tempFilePath,
-        document_type
+        documentType
       );
 
     contentArray[index] =
       extractedContent;
 
     console.log(
-      `[File ${index}] Extraction Completed: ${document_name}`
+      `[File ${index}] Extraction Completed: ${documentName}`
     );
   } finally {
     try {
@@ -147,7 +165,7 @@ async function processFile(
       );
 
       console.log(
-        `[File ${index}] Cleanup Completed: ${document_name}`
+        `[File ${index}] Cleanup Completed: ${documentName ?? fileLink}`
       );
     } catch {
       // Ignore cleanup failures

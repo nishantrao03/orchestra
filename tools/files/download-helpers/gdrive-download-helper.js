@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import path from "path";
 
 async function downloadGdriveFile(
   googleDriveUrl,
@@ -22,7 +23,8 @@ async function downloadGdriveFile(
     const patterns = [
       /\/file\/d\/([^/]+)/,
       /\/document\/d\/([^/]+)/,
-      /\/spreadsheets\/d\/([^/]+)/
+      /\/spreadsheets\/d\/([^/]+)/,
+      /\/presentation\/d\/([^/]+)/
     ];
 
     for (const pattern of patterns) {
@@ -53,6 +55,38 @@ async function downloadGdriveFile(
       );
     }
 
+    const contentDisposition =
+      response.headers.get(
+        "Content-Disposition"
+      );
+
+    if (!contentDisposition) {
+      throw new Error(
+        "Content-Disposition header not found."
+      );
+    }
+
+    const filenameMatch =
+      contentDisposition.match(
+        /filename="([^"]+)"/
+      );
+
+    if (!filenameMatch) {
+      throw new Error(
+        "Unable to extract filename."
+      );
+    }
+
+    const documentName =
+      filenameMatch[1];
+
+    const documentType =
+      path.extname(
+        documentName
+      )
+        .replace(".", "")
+        .toLowerCase();
+
     const fileBuffer =
       Buffer.from(
         await response.arrayBuffer()
@@ -63,7 +97,11 @@ async function downloadGdriveFile(
       fileBuffer
     );
 
-    return tempFilePath;
+    return {
+      temp_file_path: tempFilePath,
+      document_name: documentName,
+      document_type: documentType
+    };
   } catch (error) {
     const err = new Error(
       `downloadGdriveFile failed: ${error && error.message ? error.message : String(error)}`
