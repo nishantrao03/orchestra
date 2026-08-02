@@ -13,8 +13,9 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env")});
  * messages: Array<{ role: string, content: string }>
  * tools: Array<Object> | null
  * stream: boolean
+ * responseFormat: Object | null
  */
-export async function callGemini(messages, tools = null, stream = false) {
+export async function callGemini(messages, tools = null, stream = false, responseFormat = null) {
   try {
     const client = new OpenAI({
       apiKey: process.env.GEMINI_API_KEY,
@@ -27,6 +28,7 @@ export async function callGemini(messages, tools = null, stream = false) {
         model: "gemini-3.5-flash",
         messages,
         tools: tools ?? undefined,
+        response_format: responseFormat ?? undefined,
         stream: true
       });
     }
@@ -35,7 +37,8 @@ export async function callGemini(messages, tools = null, stream = false) {
     const response = await client.chat.completions.create({
       model: "gemini-3.5-flash",
       messages,
-      tools: tools ?? undefined
+      tools: tools ?? undefined,
+      response_format: responseFormat ?? undefined
     });
 
     return response;

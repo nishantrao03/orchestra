@@ -1,13 +1,13 @@
 import { callGemini } from "../../ai/gemini-helpers/gemini-call-helper.js";
 
-import contextAgentPrompt from "../../prompts/agents/context-agent-prompt.js";
+import toolsAgentPrompt from "../../prompts/agents/tools-agent-prompt.js";
 
-export default async function contextAgent() {
+export default async function toolsAgent() {
     try {
         const messages = [
             {
                 role: "system",
-                content: contextAgentPrompt(),
+                content: toolsAgentPrompt(),
             },
             {
                 role: "user",
@@ -18,12 +18,12 @@ export default async function contextAgent() {
         const response =
             await callGemini(messages);
 
-        console.log("[CONTEXT AGENT] Response:", response.model, response.choices[0].message.content);
+        console.log("[TOOLS AGENT] Response:", response.model, response.choices[0].message.content);
 
         return response;
     } catch (error) {
         console.error(
-            "[CONTEXT AGENT] Execution failed.",
+            "[TOOLS AGENT] Execution failed.",
             error
         );
 

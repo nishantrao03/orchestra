@@ -15,6 +15,7 @@ export default async function projectRouter(state) {
             );
 
             return {
+                executionAgent: "normal-agent",
                 nextNode: "normal-agent",
             };
         }
@@ -34,6 +35,7 @@ export default async function projectRouter(state) {
         );
 
         return {
+            executionAgent: "normal-agent",
             nextNode: "normal-agent",
         };
     }

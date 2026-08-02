@@ -4,26 +4,27 @@ export default async function plannerAgent(state) {
     console.log("Entered Planner Agent Node");
 
     try {
-        const response =
-            await plannerAgentExecution();
+        const subtasksList = await plannerAgentExecution({
+            userMessage: state.userMessage,
+        });
 
-        const nextNode =
-            Number(
-                response.choices[0].message.content
-                    .trim()
-            );
+        const callerNode = state.prevNode;
+        let nextNodeTarget;
 
-        switch (nextNode) {
-            case 1:
-                return {
-                    nextNode: "manager-agent",
-                };
-
-            default:
-                throw new Error(
-                    `Invalid Planner Agent route: ${nextNode}`
-                );
+        if (callerNode === "member-orchestrator") {
+            nextNodeTarget = "member-orchestrator";
+        } else if (callerNode === "manager-orchestrator") {
+            nextNodeTarget = "manager-orchestrator";
+        } else {
+            throw new Error(`Invalid Planner Agent caller route: ${callerNode}`);
         }
+
+        return {
+            subtasksMetadata: subtasksList,
+            currentSubtaskIndex: 0,
+            nextNode: nextNodeTarget,
+            prevNode: "planner-agent",
+        };
     } catch (error) {
         console.error(
             "[PLANNER AGENT NODE] Execution failed.",

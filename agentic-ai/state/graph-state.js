@@ -10,18 +10,23 @@ const GraphState = Annotation.Root({
     userId: Annotation(),
     role: Annotation(),
 
-    subtasks: Annotation(),
+    executionAgent: Annotation(),
+
+    subtasksMetadata: Annotation(),
     currentSubtaskIndex: Annotation(),
 
-    executionPlan: Annotation(),
+    executionPlan: Annotation(), // TBR
 
+    prevNode: Annotation(),
     nextNode: Annotation(),
 
-    managerAgentCounter: Annotation(),
+    managerAgentCounter: Annotation(), // TBR
 
-    result: Annotation(),
+    result: Annotation(), // TBR
 
     finalResponse: Annotation(),
 });
 
 export default GraphState;
+
+// TBR = To be removed.

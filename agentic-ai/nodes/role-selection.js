@@ -31,6 +31,7 @@ export default async function roleSelection(state) {
 
                 return {
                     role: projectMember.role,
+                    executionAgent: "member-agent",
                     nextNode: "member-agent",
                 };
 
@@ -41,6 +42,7 @@ export default async function roleSelection(state) {
 
                 return {
                     role: projectMember.role,
+                    executionAgent: "manager-agent",
                     nextNode: "manager-agent",
                 };
 

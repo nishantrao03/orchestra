@@ -1,13 +1,13 @@
 import { callGemini } from "../../ai/gemini-helpers/gemini-call-helper.js";
 
-import dbAgentPrompt from "../../prompts/agents/db-agent-prompt.js";
+import executionAgentPrompt from "../../prompts/agents/execution-agent-prompt.js";
 
-export default async function dbAgent() {
+export default async function executionAgent() {
     try {
         const messages = [
             {
                 role: "system",
-                content: dbAgentPrompt(),
+                content: executionAgentPrompt(),
             },
             {
                 role: "user",
@@ -18,12 +18,12 @@ export default async function dbAgent() {
         const response =
             await callGemini(messages);
 
-        console.log("[DB AGENT] Response:", response.model, response.choices[0].message.content);
+        console.log("[EXECUTION AGENT] Response:", response.model, response.choices[0].message.content);
 
         return response;
     } catch (error) {
         console.error(
-            "[DB AGENT] Execution failed.",
+            "[EXECUTION AGENT] Execution failed.",
             error
         );
 

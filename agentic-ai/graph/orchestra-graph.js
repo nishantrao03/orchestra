@@ -8,14 +8,13 @@ import projectRouter from "../nodes/project-router.js";
 import normalAgent from "../nodes/normal-agent.js";
 import handover from "../nodes/handover.js";
 import roleSelection from "../nodes/role-selection.js";
-import memberAgent from "../nodes/member-agent.js";
-import managerAgent from "../nodes/manager-agent.js";
-import slackAgent from "../nodes/slack-agent.js";
-import dbAgent from "../nodes/db-agent.js";
-import fileAgent from "../nodes/file-agent.js";
-import contextAgent from "../nodes/context-agent.js";
-import workflowAgent from "../nodes/workflow-agent.js";
+import memberOrchestrator from "../nodes/member-orchestrator.js";
+import managerOrchestrator from "../nodes/manager-orchestrator.js";
+import executionAgent from "../nodes/execution-agent.js";
 import plannerAgent from "../nodes/planner-agent.js";
+import responseAgent from "../nodes/response-agent.js";
+import workflowAgent from "../nodes/workflow-agent.js";
+import toolsAgent from "../nodes/tools-agent.js";
 
 const workflow = new StateGraph(GraphState);
 
@@ -24,19 +23,20 @@ workflow.addNode("project-router", projectRouter);
 workflow.addNode("normal-agent", normalAgent);
 workflow.addNode("handover", handover);
 workflow.addNode("role-selection", roleSelection);
-workflow.addNode("member-agent", memberAgent);
-workflow.addNode("manager-agent", managerAgent);
-workflow.addNode("slack-agent", slackAgent);
-workflow.addNode("db-agent", dbAgent);
-workflow.addNode("file-agent", fileAgent);
-workflow.addNode("context-agent", contextAgent);
-workflow.addNode("workflow-agent", workflowAgent);
+workflow.addNode("member-orchestrator", memberOrchestrator);
+workflow.addNode("manager-orchestrator", managerOrchestrator);
+workflow.addNode("execution-agent", executionAgent);
 workflow.addNode("planner-agent", plannerAgent);
+workflow.addNode("response-agent", responseAgent);
+workflow.addNode("workflow-agent", workflowAgent);
+workflow.addNode("tools-agent", toolsAgent);
 
 workflow.addEdge(START, "start");
 workflow.addEdge("start", "project-router");
 workflow.addEdge("normal-agent", "handover");
-workflow.addEdge("member-agent", END);
+workflow.addEdge("execution-agent", "member-orchestrator");
+workflow.addEdge("workflow-agent", "manager-orchestrator");
+workflow.addEdge("tools-agent", "manager-orchestrator");
 
 workflow.addConditionalEdges(
     "project-router",
@@ -60,63 +60,32 @@ workflow.addConditionalEdges(
     "role-selection",
     router,
     {
-        "member-agent": "member-agent",
-        "manager-agent": "manager-agent",
+        "member-orchestrator": "member-orchestrator",
+        "manager-orchestrator": "manager-orchestrator",
         [END]: END,
     }
 );
 
 workflow.addConditionalEdges(
-    "manager-agent",
+    "member-orchestrator",
     router,
     {
-        "slack-agent": "slack-agent",
-        "db-agent": "db-agent",
-        "file-agent": "file-agent",
-        "context-agent": "context-agent",
-        "workflow-agent": "workflow-agent",
+        "execution-agent": "execution-agent",
         "planner-agent": "planner-agent",
+        "response-agent": "response-agent",
         [END]: END,
     }
 );
 
 workflow.addConditionalEdges(
-    "slack-agent",
+    "manager-orchestrator",
     router,
     {
-        "manager-agent": "manager-agent",
-    }
-);
-
-workflow.addConditionalEdges(
-    "db-agent",
-    router,
-    {
-        "manager-agent": "manager-agent",
-    }
-);
-
-workflow.addConditionalEdges(
-    "file-agent",
-    router,
-    {
-        "manager-agent": "manager-agent",
-    }
-);
-
-workflow.addConditionalEdges(
-    "context-agent",
-    router,
-    {
-        "manager-agent": "manager-agent",
-    }
-);
-
-workflow.addConditionalEdges(
-    "workflow-agent",
-    router,
-    {
-        "manager-agent": "manager-agent",
+        "planner-agent": "planner-agent",
+        "response-agent": "response-agent",
+        "workflow-agent": "workflow-agent",
+        "tools-agent": "tools-agent",
+        [END]: END,
     }
 );
 
@@ -124,7 +93,17 @@ workflow.addConditionalEdges(
     "planner-agent",
     router,
     {
-        "manager-agent": "manager-agent",
+        "member-orchestrator": "member-orchestrator",
+        "manager-orchestrator": "manager-orchestrator",
+    }
+);
+
+workflow.addConditionalEdges(
+    "response-agent",
+    router,
+    {
+        "member-orchestrator": "member-orchestrator",
+        "manager-orchestrator": "manager-orchestrator",
     }
 );
 
