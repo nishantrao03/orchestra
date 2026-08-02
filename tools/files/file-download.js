@@ -109,7 +109,7 @@ async function processFile(
       `${parsedName.name}-file-${index}${parsedName.ext}`;
   }
 
-  const tempFilePath = path.join(
+  let tempFilePath = path.join(
     TEMP_UPLOADS_DIR,
     tempFileName
   );
@@ -136,6 +136,9 @@ async function processFile(
 
       documentType =
         downloadResult.document_type;
+
+      tempFilePath =
+        downloadResult.temp_file_path;
     } else {
       throw new Error(
         `Unsupported source: ${source}`

@@ -1,9 +1,15 @@
 import fs from "fs/promises";
 import dotenv from 'dotenv';
+import path from "path";
 dotenv.config();
 
 const SLACK_BOT_TOKEN =
   process.env.SLACK_BOT_TOKEN;
+
+const TEMP_UPLOADS_DIR = path.join(
+  process.cwd(),
+  "temp-uploads"
+);
 
 async function downloadSlackFile(
   fileUrl,
@@ -11,7 +17,7 @@ async function downloadSlackFile(
 ) {
   try {
     console.log(fileUrl);
-
+    console.log("Temp file path:", tempFilePath);
     if (!SLACK_BOT_TOKEN) {
       throw new Error(
         "SLACK_BOT_TOKEN is missing in environment variables."
@@ -25,8 +31,11 @@ async function downloadSlackFile(
     }
 
     if (!tempFilePath) {
-      throw new Error(
-        "tempFilePath is required."
+      await fs.mkdir(
+        TEMP_UPLOADS_DIR,
+        {
+          recursive: true
+        }
       );
     }
 

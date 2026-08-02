@@ -55,6 +55,7 @@ async function fileDownloadTest() {
 
         const updateText = await buildUpdateText(files);
         console.log("Update text generated");
+        console.log(updateText);
     } catch (error) {   
         console.error("Error during file download test:", error);
         process.exit(1);

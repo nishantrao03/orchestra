@@ -97,16 +97,33 @@ async function downloadGdriveFile(
       fileBuffer
     );
 
+    const finalFilePath =
+      path.join(
+        path.dirname(
+          tempFilePath
+        ),
+        documentName
+      );
+
+    await fs.rename(
+      tempFilePath,
+      finalFilePath
+    );
+
     return {
-      temp_file_path: tempFilePath,
-      document_name: documentName,
-      document_type: documentType
+      temp_file_path:
+        finalFilePath,
+      document_name:
+        documentName,
+      document_type:
+        documentType
     };
   } catch (error) {
     const err = new Error(
       `downloadGdriveFile failed: ${error && error.message ? error.message : String(error)}`
     );
-    err.originalError = error;
+    err.originalError =
+      error;
     throw err;
   }
 }
