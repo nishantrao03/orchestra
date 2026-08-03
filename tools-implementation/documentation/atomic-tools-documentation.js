@@ -603,7 +603,217 @@ description: "Downloads one or more files and extracts their textual content int
     }
   }
 },
-    
+    {
+      // SLACK TOOL
+  type: "function",
+  function: {
+    name: "create_channel_canvas_tool",
+    description: "Creates a canvas for a Slack channel. Prefer using the create_canvas_for_channel_workflow instead of this tool whenever possible, and use this tool only if the workflow cannot be used. Before creating a canvas, always validate that the channel belongs to the target project by calling validate_project_channels_tool. After successfully creating the canvas, always call create_canvas_for_channel_tool to store the channel-canvas mapping in the database.",
+    parameters: {
+      type: "object",
+      properties: {
+        channelId: {
+          type: "string",
+          description: "Slack channel ID for which the canvas should be created."
+        },
+        content: {
+          type: "string",
+          description: "Markdown content to initialize the channel canvas."
+        }
+      },
+      required: [
+        "channelId",
+        "content"
+      ]
+    }
+  }
+},
+  {
+    // SLACK TOOL
+  type: "function",
+  function: {
+    name: "create_channels_tool",
+    description: "Creates one or more Slack channels. Prefer using the create_channels_workflow instead of this tool whenever possible, and use this tool only if the workflow cannot be used. After successfully creating the channels on Slack, always call link_project_to_channels_tool to link the created channels with the corresponding project in the database.",
+    parameters: {
+      type: "object",
+      properties: {
+        channels: {
+          type: "array",
+          description: "Array of Slack channels to create.",
+          items: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                description: "Name of the Slack channel to create."
+              },
+              isPrivate: {
+                type: "boolean",
+                description: "Whether the channel should be private. Defaults to false if omitted."
+              }
+            },
+            required: [
+              "name"
+            ]
+          }
+        }
+      },
+      required: [
+        "channels"
+      ]
+    }
+  }
+},
+    {
+      // SLACK TOOL
+  type: "function",
+  function: {
+    name: "find_users_by_email_tool",
+    description: "Finds Slack users using their email addresses and returns their corresponding Slack member IDs. Use when Slack member IDs are required but only email addresses are available. Do not use if the Slack member IDs are already known.",
+    parameters: {
+      type: "object",
+      properties: {
+        emails: {
+          type: "array",
+          description: "Array of email addresses to look up.",
+          items: {
+            type: "string"
+          }
+        }
+      },
+      required: [
+        "emails"
+      ]
+    }
+  }
+},
+    {
+      // SLACK TOOL
+  type: "function",
+  function: {
+    name: "get_channel_history_tool",
+    description: "Fetches the latest messages from a Slack channel along with their thread replies. Use only when recent Slack conversations are specifically required or when the requested information is not expected to be available through the project context retrieval system. Before calling this tool, always validate that the channel belongs to the target project using validate_project_channels_tool. This tool retrieves only the latest 50 messages and their associated thread replies; it does not fetch the complete channel history.",
+    parameters: {
+      type: "object",
+      properties: {
+        channel: {
+          type: "string",
+          description: "Slack channel ID whose recent message history should be retrieved."
+        }
+      },
+      required: [
+        "channel"
+      ]
+    }
+  }
+},
+    {
+      // SLACK TOOL
+  type: "function",
+  function: {
+    name: "post_message_in_thread_tool",
+    description: "Posts a message as a reply in an existing Slack thread. Use only when responding inside an existing thread. Do not use to start a new thread or post a normal channel message. Both the Slack channel ID and the parent thread timestamp must be available before calling this tool. Call this only after all required processing and tool calls have been completed, as this should typically be the final action.",
+    parameters: {
+      type: "object",
+      properties: {
+        channel: {
+          type: "string",
+          description: "Slack channel ID where the thread exists."
+        },
+        threadTs: {
+          type: "string",
+          description: "Timestamp of the parent message that identifies the thread."
+        },
+        text: {
+          type: "string",
+          description: "Message to post as a reply in the thread."
+        }
+      },
+      required: [
+        "channel",
+        "threadTs",
+        "text"
+      ]
+    }
+  }
+},
+    {
+      // SLACK TOOL
+  type: "function",
+  function: {
+    name: "post_message_tool",
+    description: "Posts a message directly to a Slack channel. Use only when sending a new message to a channel and not as a reply to an existing thread. Do not use to reply inside a thread; use post_message_in_thread_tool instead. The Slack channel ID must be available before calling this tool. Call this only after all required processing and tool calls have been completed, as this should typically be the final action.",
+    parameters: {
+      type: "object",
+      properties: {
+        channel: {
+          type: "string",
+          description: "Slack channel ID where the message should be posted."
+        },
+        text: {
+          type: "string",
+          description: "Message to post in the channel."
+        }
+      },
+      required: [
+        "channel",
+        "text"
+      ]
+    }
+  }
+},
+    {
+      // SLACK TOOL
+  type: "function",
+  function: {
+    name: "remove_members_from_channel_tool",
+    description: "Removes one or more members from a Slack channel. Prefer using the remove_members_from_channel_workflow instead of this tool whenever possible, and use this tool only if the workflow cannot be used. Before removing members, always validate that the channel belongs to the target project by calling validate_project_channels_tool. Always provide Slack member IDs, not email addresses or user names. If only email addresses are available, first use find_users_by_email_tool to resolve them to Slack member IDs before calling this tool.",
+    parameters: {
+      type: "object",
+      properties: {
+        channel: {
+          type: "string",
+          description: "Slack channel ID from which members should be removed."
+        },
+        userIds: {
+          type: "array",
+          description: "Array of Slack member IDs to remove from the channel.",
+          items: {
+            type: "string"
+          }
+        }
+      },
+      required: [
+        "channel",
+        "userIds"
+      ]
+    }
+  }
+},
+  {
+  type: "function",
+  function: {
+    name: "get_thread_replies_tool",
+    description: "Fetches all messages belonging to an existing Slack thread. Use when the complete conversation within a specific thread is required. Do not use to retrieve normal channel messages; use get_channel_history_tool instead. Both the Slack channel ID and the thread timestamp must be available before calling this tool.",
+    parameters: {
+      type: "object",
+      properties: {
+        channel: {
+          type: "string",
+          description: "Slack channel ID containing the thread."
+        },
+        threadTs: {
+          type: "string",
+          description: "Timestamp of the parent message that identifies the thread."
+        }
+      },
+      required: [
+        "channel",
+        "threadTs"
+      ]
+    }
+  }
+},
   {
     // CACHE TOOL
     type: "function",
