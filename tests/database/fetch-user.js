@@ -3,7 +3,7 @@ import fetchUser from "../../tools/database/user/fetch-user.js";
 
 async function testFetchUser() {
   console.log("Running fetchUser test...");
-  const testSlackMemberId = "U12345678"; // Replace with an actual Slack member ID for testing  
+  const testSlackMemberId = "U0AC0M1S90W"; // Replace with an actual Slack member ID for testing  
   try {
     const user = await fetchUser({ slackMemberId: testSlackMemberId });
     console.log("User fetched successfully:", user);

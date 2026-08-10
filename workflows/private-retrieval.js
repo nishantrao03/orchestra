@@ -38,7 +38,7 @@ async function privateRetrievalWorkflow({
         return retrievalResult;
     } catch (error) {
         console.error(
-            "[PUBLIC RETRIEVAL] Workflow failed",
+            "[PRIVATE RETRIEVAL] Workflow failed",
             error
         );
 

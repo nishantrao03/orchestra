@@ -1,9 +1,8 @@
 import fs from 'fs';
-import workflowTools from '../kebab-case-documentation/workflow-tools-documentation-kebab-case.js';
+import managerAgentWorkflows from '../kebab-case-documentation/manager-agent-workflows-documentation-kebab-case.js';
 
-// N for normal agent, M for member agent and G for manager agent
-
-const workflowToolsSnakeCase = [
+// manager-agent-workflows-documentation.js
+const managerAgentWorkflowsSnakeCase = [
   {
     // G
   type: "function",
@@ -376,31 +375,6 @@ const workflowToolsSnakeCase = [
   }
 },
   {
-    // M
-  type: "function",
-  function: {
-    name: "retrieval_private_workflow",
-    description: "Retrieves relevant context from the project's knowledge base. Prefer using this workflow whenever a user asks a project-specific question that requires information from the stored project context. Pass only the user's main query as the retrieval query. Do not include previous conversation history, assistant responses, or any additional context in the query. This workflow only retrieves relevant context and does not generate the final answer. Use the retrieved context to formulate the response.",
-    parameters: {
-      type: "object",
-      properties: {
-        query: {
-          type: "string",
-          description: "The user's main query to retrieve relevant project context."
-        },
-        projectId: {
-          type: "string",
-          description: "Project ID."
-        }
-      },
-      required: [
-        "query",
-        "projectId"
-      ]
-    }
-  }
-},
-  {
     // G
   type: "function",
   function: {
@@ -474,6 +448,51 @@ const workflowToolsSnakeCase = [
     // G
   type: "function",
   function: {
+    name: "remove_members_from_channels_workflow",
+    description: "Removes one or more users from project channels. Prefer using this workflow whenever users need to be removed from Slack channels belonging to a project. Always provide Slack member IDs as input. If only email addresses are available, first resolve them using find_users_by_email_tool. Only remove users from the channels explicitly specified by the user. Do not assume they should be removed from all project channels. If the user explicitly requests removal from all project channels, provide all project channel IDs as input to this workflow. Use this workflow only when the user's intent is to remove users from channels while retaining their project membership. If the user's intent is to revoke project access completely, use remove_members_from_project_workflow instead.",
+    parameters: {
+      type: "object",
+      properties: {
+        projectId: {
+          type: "string",
+          description: "Project ID."
+        },
+        channels: {
+          type: "array",
+          description: "Array of channels and the users to remove from each channel.",
+          items: {
+            type: "object",
+            properties: {
+              channelId: {
+                type: "string",
+                description: "Slack channel ID."
+              },
+              userIds: {
+                type: "array",
+                description: "Array of Slack member IDs to remove from the channel.",
+                items: {
+                  type: "string"
+                }
+              }
+            },
+            required: [
+              "channelId",
+              "userIds"
+            ]
+          }
+        }
+      },
+      required: [
+        "projectId",
+        "channels"
+      ]
+    }
+  }
+},
+  {
+    // G
+  type: "function",
+  function: {
     name: "remove_members_from_project_workflow",
     description: "Removes one or more users from a project. Prefer using this workflow whenever users need to be removed from a project. Always provide Slack member IDs as input. If only email addresses are available, first resolve them using find_users_by_email_tool. This workflow also removes the users from all channels belonging to the project. Use this workflow when the user's intent is to revoke project access completely.",
     parameters: {
@@ -500,10 +519,10 @@ const workflowToolsSnakeCase = [
 }
 ];
 
-export default workflowTools;
+export default managerAgentWorkflows;
 
-// function exportKebabCaseJson() {
-//   const modifiedTools = workflowTools.map(tool => {
+// function exportKebabCaseJson(tools) {
+//   const modifiedTools = tools.map(tool => {
 //     const clonedTool = JSON.parse(JSON.stringify(tool));
 //     if (clonedTool.function && clonedTool.function.name) {
 //       clonedTool.function.name = clonedTool.function.name.replace(/_/g, '-');
@@ -511,10 +530,9 @@ export default workflowTools;
 //     return clonedTool;
 //   });
 
-//   fs.writeFileSync('workflow-tools-documentation-kebab-case.js', JSON.stringify(modifiedTools, null, 2), 'utf-8');
+//   fs.writeFileSync('manager-agent-workflows-documentation-kebab-case.js', JSON.stringify(modifiedTools, null, 2), 'utf-8');
 // }
 
-// exportKebabCaseJson();
+// exportKebabCaseJson(managerAgentWorkflows);
 
-console.log(workflowTools);
-console.log(workflowToolsSnakeCase);
+console.log(managerAgentWorkflows);

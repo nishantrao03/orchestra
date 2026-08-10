@@ -1,9 +1,8 @@
 import fs from 'fs';
-import atomicTools from '../kebab-case-documentation/atomic-tools-documentation-kebab-case.js';
+import managerAgentTools from '../kebab-case-documentation/manager-agent-tools-documentation-kebab-case.js';
 
-// N means only accessible by normal agent, M means accessible by member agent, G means accessible by manager agent
-
-const atomicToolsSnakeCase = [
+// manager-agent-tools-documentation.js
+const managerAgentToolsSnakeCase = [
   {
     // DATABASE TOOL, G 
     type: "function",
@@ -220,32 +219,7 @@ const atomicToolsSnakeCase = [
     }
   },
   {
-    // DATABASE TOOL, N
-    type: "function",
-    function: {
-      name: "link_project_to_thread_tool",
-      description: "Links a Slack thread to a project in the database. Use when a project association needs to be stored for a private DM thread or group chat thread. Do not use for channel conversations. Only use this tool when the request originates from a conversation whose channel ID starts with 'D' or 'G'. Never use this tool when the channel ID starts with 'C'.",
-      parameters: {
-        type: "object",
-        properties: {
-          projectId: {
-            type: "string",
-            description: "Unique identifier of the project."
-          },
-          threadId: {
-            type: "string",
-            description: "Slack thread identifier."
-          }
-        },
-        required: [
-          "projectId",
-          "threadId"
-        ]
-      }
-    }
-  },
-  {
-    // DATABASE TOOL, G
+        // DATABASE TOOL, G
   type: "function",
   function: {
     name: "fetch_documents_for_project_tool",
@@ -329,31 +303,6 @@ const atomicToolsSnakeCase = [
       },
       required: [
         "users"
-      ]
-    }
-  }
-},
-    {
-        // DATABASE TOOL, N
-  type: "function",
-  function: {
-    name: "create_project_tool",
-    description: "Creates a new project in the database. Prefer using the create project workflow instead of this tool whenever possible, and use this tool only if the workflow cannot be used. Do not use this tool to perform complete project setup. After successfully creating the project, always link the creator to the project using the project member tool and assign them the 'manager' role.",
-    parameters: {
-      type: "object",
-      properties: {
-        projectName: {
-          type: "string",
-          description: "Name of the project to create."
-        },
-        creatorSlackId: {
-          type: "string",
-          description: "Slack user ID of the project creator."
-        }
-      },
-      required: [
-        "projectName",
-        "creatorSlackId"
       ]
     }
   }
@@ -1133,50 +1082,10 @@ description: "Downloads one or more files and extracts their textual content int
       ]
     }
   }
-},
-  {
-    // CACHE TOOL, Dont expose
-  type: "function",
-  function: {
-    name: "get_thread_project_tool",
-    description: "Fetches the project ID associated with a Slack thread. Use when the project corresponding to a thread needs to be determined. This tool automatically falls back to the database on a cache miss and updates the cache before returning the result.",
-    parameters: {
-      type: "object",
-      properties: {
-        threadId: {
-          type: "string",
-          description: "Slack thread ID whose associated project ID should be retrieved."
-        }
-      },
-      required: [
-        "threadId"
-      ]
-    }
-  }
-},
-  {
-    // CACHE TOOL, Dont expose
-  type: "function",
-  function: {
-    name: "invalidate_thread_project_tool",
-    description: "Invalidates the cached project mapping for a Slack thread. Use this tool whenever a thread is linked to a different project or the thread-project mapping is created, removed, or changed to ensure future lookups return the latest data.",
-    parameters: {
-      type: "object",
-      properties: {
-        threadId: {
-          type: "string",
-          description: "Slack thread ID whose cached project mapping should be invalidated."
-        }
-      },
-      required: [
-        "threadId"
-      ]
-    }
-  }
 }
 ];
 
-export default atomicTools;
+export default managerAgentTools;
 
 // function exportKebabCaseJson(tools) {
 //   const modifiedTools = tools.map(tool => {
@@ -1190,4 +1099,6 @@ export default atomicTools;
 //   fs.writeFileSync('atomic-tools-documentation-kebab-case.js', JSON.stringify(modifiedTools, null, 2), 'utf-8');
 // }
 
-console.log(atomicTools);
+// exportKebabCaseJson(managerAgentTools);
+
+console.log(managerAgentTools);
