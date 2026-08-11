@@ -139,56 +139,56 @@ async function executeTools(
   return toolResults;
 }
 
-/**
- * Test function to validate the execution of different tool format categories.
- */
-async function testExecuteTools() {
-  const testToolCalls = [
-    {
-      id: "call_primitive_001",
-      function: {
-        name: "fetch-documents-for-project-tool",
-        arguments: JSON.stringify({
-          projectId: "08cafc23-9bab-4b0e-98c4-9c95ca1dd9e3",
-        }),
-      },
-    },
-    {
-      id: "call_positional_002",
-      function: {
-        name: "get-project-member-tool",
-        arguments: JSON.stringify({
-          projectId: "08cafc23-9bab-4b0e-98c4-9c95ca1dd9e3",
-          userId: "U0AC0M1S90W",
-        }),
-      },
-    },
-    {
-      id: "call_object_003",
-      function: {
-        name: "ingest-updates-workflow",
-        arguments: JSON.stringify({
-          projectId: "08cafc23-9bab-4b0e-98c4-9c95ca1dd9e3",
-          public: { text: "The new knowledge base integration for the Slack bot is encountering retrieval latency. The vector embeddings in the database must be re-indexed before the upcoming Friday deployment." },
-        }),
-      },
-    },
-  ];
+// /**
+//  * Test function to validate the execution of different tool format categories.
+//  */
+// async function testExecuteTools() {
+//   const testToolCalls = [
+//     {
+//       id: "call_primitive_001",
+//       function: {
+//         name: "fetch-documents-for-project-tool",
+//         arguments: JSON.stringify({
+//           projectId: "08cafc23-9bab-4b0e-98c4-9c95ca1dd9e3",
+//         }),
+//       },
+//     },
+//     {
+//       id: "call_positional_002",
+//       function: {
+//         name: "get-project-member-tool",
+//         arguments: JSON.stringify({
+//           projectId: "08cafc23-9bab-4b0e-98c4-9c95ca1dd9e3",
+//           userId: "U0AC0M1S90W",
+//         }),
+//       },
+//     },
+//     {
+//       id: "call_object_003",
+//       function: {
+//         name: "ingest-updates-workflow",
+//         arguments: JSON.stringify({
+//           projectId: "08cafc23-9bab-4b0e-98c4-9c95ca1dd9e3",
+//           public: { text: "The new knowledge base integration for the Slack bot is encountering retrieval latency. The vector embeddings in the database must be re-indexed before the upcoming Friday deployment." },
+//         }),
+//       },
+//     },
+//   ];
 
-  console.log("Starting tool execution tests...");
+//   console.log("Starting tool execution tests...");
   
-  try {
-    for (const toolCall of testToolCalls) {
-      const results = await executeTools([toolCall]);
-      console.log(JSON.stringify(results, null, 2));
-    }
-    console.log("Test execution completed successfully.");
-  } catch (error) {
-    console.error("Test execution failed:", error);
-  }
-}
+//   try {
+//     for (const toolCall of testToolCalls) {
+//       const results = await executeTools([toolCall]);
+//       console.log(JSON.stringify(results, null, 2));
+//     }
+//     console.log("Test execution completed successfully.");
+//   } catch (error) {
+//     console.error("Test execution failed:", error);
+//   }
+// }
 
-// Uncomment the line below to run the tests locally
-testExecuteTools();
+// // Uncomment the line below to run the tests locally
+// testExecuteTools();
 
 export default executeTools;

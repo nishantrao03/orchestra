@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 
 // Import the configured Slack events application
@@ -8,8 +9,6 @@ import slackEventsApp from "./slack/slack-events.js";
 import { connectRedis } from "./redis/redis-client.js";
 
 await connectRedis();
-
-dotenv.config();
 
 const SLACK_CHANNEL = process.env.SLACK_CHANNEL;
 const PORT = 3000;

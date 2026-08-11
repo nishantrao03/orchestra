@@ -277,6 +277,9 @@ export default async function handleAppMention({
         );
       }
 
+      console.log("Assistant Message");
+      console.log(assistantMessage);
+
       const toolCalls =
         assistantMessage
           .tool_calls;
@@ -300,11 +303,16 @@ export default async function handleAppMention({
           toolCalls
         );
 
+        console.log("Messages before");
+      console.log(messages);
+
       addToolResultsToMessages(
         messages,
         assistantMessage,
         toolResults
       );
+      console.log("Messages after");
+      console.log(messages);
 
       iteration++;
     }

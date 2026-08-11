@@ -14,6 +14,8 @@ const GraphState = Annotation.Root({
 
     subtasksMetadata: Annotation(),
     currentSubtaskIndex: Annotation(),
+    threadMessages: Annotation(),
+    messages: Annotation(),
 
     executionPlan: Annotation(), // TBR
 
