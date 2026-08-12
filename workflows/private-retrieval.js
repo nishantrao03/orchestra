@@ -12,8 +12,8 @@ import retrieveChunks from "../tools/api-call/retrieve-chunks.js";
  * @returns {Object}
  */
 async function privateRetrievalWorkflow({
-    query,
     projectId,
+    query
 }) {
     try {
         if (!query) {

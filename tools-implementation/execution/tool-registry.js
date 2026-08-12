@@ -52,62 +52,62 @@ import removeMembersFromChannels from "../../workflows/remove-members-from-chann
 import removeMembersFromProject from "../../workflows/remove-members-from-project.js";
 
 const toolRegistry = {
-  "create-canvas-for-channel-tool": { handler: createCanvasForChannel, format: ["channelCanvasPairs"] },
-  "fetch-canvas-for-channel-tool": { handler: fetchCanvasForChannel, format: ["channelIds"] },
-  "link-projects-to-channel-tool": { handler: linkProjectsToChannel, format: ["projectId", "channels"] },
-  "validate-project-channels-tool": { handler: validateProjectChannels, format: ["projectId", "channelIds"] },
-  "create-documents-tool": { handler: createDocuments, format: ["documents"] },
-  "delete-documents-tool": { handler: deleteDocuments, format: ["documentIds"] },
-  "link-project-to-thread-tool": { handler: linkProjectToThread, format: ["projectId", "threadId"] },
-  "fetch-documents-for-project-tool": { handler: fetchDocumentsForProject, format: ["projectId"] },
-  "fetch-documents-tool": { handler: fetchDocuments, format: ["documentIds"] },
-  "change-project-member-roles-tool": { handler: changeProjectMemberRoles, format: ["users"] },
-  "create-project-tool": { handler: createProject, format: ["projectName", "creatorSlackId"] },
-  "fetch-channels-for-project-tool": { handler: fetchChannelsForProject, format: ["projectId"] },
-  "link-project-to-users-tool": { handler: linkProjectToUsers, format: ["projectId", "users"] },
-  "remove-users-from-project-tool": { handler: removeUsersFromProject, format: ["projectId", "userIds"] },
-  "update-project-names-tool": { handler: updateProjectNames, format: ["projects"] },
-  "create-users-tool": { handler: createUsers, format: ["users"] },
-  "fetch-user-tool": { handler: fetchUser, format: ["slackMemberId"] },
-  "extract-file-content-tool": { handler: buildUpdateText, format: ["files"] },
-  "add-members-to-channel-tool": { handler: addMembersToChannel, format: ["channel", "userIds"] },
-  "create-channel-canvas-tool": { handler: createChannelCanvas, format: ["channelId", "content"] },
-  "create-channels-tool": { handler: createChannels, format: ["channels"] },
-  "find-users-by-email-tool": { handler: findUsersByEmail, format: ["emails"] },
-  "get-channel-history-tool": { handler: getChannelHistory, format: ["channel"] },
-  "post-message-in-thread-tool": { handler: postMessageInThread, format: ["channel", "threadTs", "text"] },
-  "post-message-tool": { handler: postMessage, format: ["channel", "text"] },
-  "remove-members-from-channel-tool": { handler: removeMembersFromChannel, format: ["channel", "userIds"] },
-  "get-thread-replies-tool": { handler: getThreadReplies, format: ["channel", "threadTs"] },
-  "get-channel-project-tool": { handler: getChannelProject, format: ["channelId"] },
-  "invalidate-channel-project-tool": { handler: invalidateChannelProject, format: ["channelId"] },
-  "get-user-projects-tool": { handler: getUserProjects, format: ["userId"] },
-  "invalidate-user-projects-tool": { handler: invalidateUserProjects, format: ["userId"] },
-  "get-project-channels-tool": { handler: getProjectChannels, format: ["projectId"] },
-  "invalidate-project-channels-tool": { handler: invalidateProjectChannels, format: ["projectId"] },
-  "append-channels-to-project-tool": { handler: appendChannelsToProjectCache, format: ["projectId", "newChannels"] },
-  "get-project-users-tool": { handler: getProjectUsers, format: ["projectId"] },
-  "invalidate-project-users-tool": { handler: invalidateProjectUsers, format: ["projectId"] },
-  "get-project-member-tool": { handler: getProjectMember, format: ["projectId", "userId"] },
-  "is-project-member-tool": { handler: isProjectMember, format: ["projectId", "userId"] },
-  "is-project-manager-tool": { handler: isProjectManager, format: ["projectId", "userId"] },
-  "invalidate-project-member-tool": { handler: invalidateProjectMember, format: ["projectId", "userId"] },
-  "get-thread-project-tool": { handler: getThreadProject, format: ["threadId"] },
-  "invalidate-thread-project-tool": { handler: invalidateThreadProject, format: ["threadId"] },
+  "create-canvas-for-channel-tool": { handler: createCanvasForChannel, format: ["channelCanvasPairs"] }, //object
+  "fetch-canvas-for-channel-tool": { handler: fetchCanvasForChannel, format: ["channelIds"] }, //object
+  "link-projects-to-channel-tool": { handler: linkProjectsToChannel, format: ["projectId", "channels"] }, //object
+  "validate-project-channels-tool": { handler: validateProjectChannels, format: ["projectId", "channelIds"] }, //object
+    "create-documents-tool": { handler: createDocuments, format: ["documents"] }, //positional
+    "delete-documents-tool": { handler: deleteDocuments, format: ["documentIds"] }, //positional
+  "link-project-to-thread-tool": { handler: linkProjectToThread, format: ["projectId", "threadId"] }, //object
+    "fetch-documents-for-project-tool": { handler: fetchDocumentsForProject, format: ["projectId"] }, //positional
+    "fetch-documents-tool": { handler: fetchDocuments, format: ["documentIds"] }, //positional
+  "change-project-member-roles-tool": { handler: changeProjectMemberRoles, format: ["users"] }, //object
+  "create-project-tool": { handler: createProject, format: ["projectName", "creatorSlackId"] }, //object
+    "fetch-channels-for-project-tool": { handler: fetchChannelsForProject, format: ["projectId"] }, //object
+    "link-project-to-users-tool": { handler: linkProjectToUsers, format: ["projectId", "users"] }, //object
+    "remove-users-from-project-tool": { handler: removeUsersFromProject, format: ["projectId", "userIds"] }, //object
+    "update-project-names-tool": { handler: updateProjectNames, format: ["projects"] }, //object
+    "create-users-tool": { handler: createUsers, format: ["users"] }, //object
+    "fetch-user-tool": { handler: fetchUser, format: ["slackMemberId"] }, //object
+    "extract-file-content-tool": { handler: buildUpdateText, format: ["files"] }, //positional
+    "add-members-to-channel-tool": { handler: addMembersToChannel, format: ["channel", "userIds"] }, //object
+    "create-channel-canvas-tool": { handler: createChannelCanvas, format: ["channelId", "content"] }, //object
+    "create-channels-tool": { handler: createChannels, format: ["channels"] }, //object
+    "find-users-by-email-tool": { handler: findUsersByEmail, format: ["emails"] }, //object
+    "get-channel-history-tool": { handler: getChannelHistory, format: ["channel"] }, //object
+    "post-message-in-thread-tool": { handler: postMessageInThread, format: ["channel", "threadTs", "text"] }, //object
+    "post-message-tool": { handler: postMessage, format: ["channel", "text"] }, //object
+    "remove-members-from-channel-tool": { handler: removeMembersFromChannel, format: ["channel", "userIds"] }, //object
+    "get-thread-replies-tool": { handler: getThreadReplies, format: ["channel", "threadTs"] }, //object
+  "get-channel-project-tool": { handler: getChannelProject, format: ["channelId"] }, //positional
+  "invalidate-channel-project-tool": { handler: invalidateChannelProject, format: ["channelId"] }, //positional
+  "get-user-projects-tool": { handler: getUserProjects, format: ["userId"] }, //positional
+  "invalidate-user-projects-tool": { handler: invalidateUserProjects, format: ["userId"] }, //positional
+  "get-project-channels-tool": { handler: getProjectChannels, format: ["projectId"] }, //positional
+  "invalidate-project-channels-tool": { handler: invalidateProjectChannels, format: ["projectId"] }, //positional
+  "append-channels-to-project-tool": { handler: appendChannelsToProjectCache, format: ["projectId", "newChannels"] }, //positional
+  "get-project-users-tool": { handler: getProjectUsers, format: ["projectId"] }, //positional
+  "invalidate-project-users-tool": { handler: invalidateProjectUsers, format: ["projectId"] }, //positional
+  "get-project-member-tool": { handler: getProjectMember, format: ["projectId", "userId"] }, //positional
+  "is-project-member-tool": { handler: isProjectMember, format: ["projectId", "userId"] }, //positional
+  "is-project-manager-tool": { handler: isProjectManager, format: ["projectId", "userId"] }, //positional
+  "invalidate-project-member-tool": { handler: invalidateProjectMember, format: ["projectId", "userId"] }, //positional
+  "get-thread-project-tool": { handler: getThreadProject, format: ["threadId"] }, //positional
+  "invalidate-thread-project-tool": { handler: invalidateThreadProject, format: ["threadId"] }, //positional
 
-  "add-members-to-channels-workflow": { handler: addMembersToChannels, format: ["projectId", "channels"] },
-  "add-members-to-project-workflow": { handler: addMembersToProject, format: ["projectId", "users"] },
-  "change-project-member-roles-workflow": { handler: changeProjectMemberRolesWorkflow, format: ["users"] },
-  "create-canvas-for-channel-workflow": { handler: createCanvasForChannelWorkflow, format: ["projectId", "channelId", "content"] },
-  "create-channels-workflow": { handler: createChannelsWorkflow, format: ["projectId", "userId", "channels"] },
-  "create-project-workflow": { handler: createProjectWorkflow, format: "object" },
-  "delete-context-workflow": { handler: deleteContextWorkflow, format: ["projectId", "documentIds"] },
-  "ingest-documents-workflow": { handler: ingestDocumentsWorkflow, format: "object" },
-  "ingest-updates-workflow": { handler: ingestUpdatesWorkflow, format: "object" },
-  "retrieval-private-workflow": { handler: privateRetrievalWorkflow, format: ["query", "projectId"] },
-  "retrieval-public-workflow": { handler: publicRetrievalWorkflow, format: ["query", "projectId"] },
-  "remove-members-from-channels-workflow": { handler: removeMembersFromChannels, format: ["projectId", "channels"] },
-  "remove-members-from-project-workflow": { handler: removeMembersFromProject, format: ["projectId", "userIds"] }
+  "add-members-to-channels-workflow": { handler: addMembersToChannels, format: ["projectId", "channels"] }, //object
+  "add-members-to-project-workflow": { handler: addMembersToProject, format: ["projectId", "users"] }, //object
+  "change-project-member-roles-workflow": { handler: changeProjectMemberRolesWorkflow, format: ["users"] }, //object
+  "create-canvas-for-channel-workflow": { handler: createCanvasForChannelWorkflow, format: ["projectId", "channelId", "content"] }, //object
+  "create-channels-workflow": { handler: createChannelsWorkflow, format: ["projectId", "userId", "channels"] }, //object
+  "create-project-workflow": { handler: createProjectWorkflow, format: "object" }, //object
+  "delete-context-workflow": { handler: deleteContextWorkflow, format: ["projectId", "documentIds"] }, //object
+  "ingest-documents-workflow": { handler: ingestDocumentsWorkflow, format: "object" }, //object
+  "ingest-updates-workflow": { handler: ingestUpdatesWorkflow, format: "object" }, //object
+  "retrieval-private-workflow": { handler: privateRetrievalWorkflow, format: "object" }, //object
+  "retrieval-public-workflow": { handler: publicRetrievalWorkflow, format: "object" }, //object
+  "remove-members-from-channels-workflow": { handler: removeMembersFromChannels, format: ["projectId", "channels"] }, //object
+  "remove-members-from-project-workflow": { handler: removeMembersFromProject, format: ["projectId", "userIds"] } //object
 };
 
 export default toolRegistry;
