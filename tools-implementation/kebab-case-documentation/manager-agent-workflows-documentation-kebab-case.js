@@ -158,7 +158,7 @@ const managerAgentWorkflows = [
     "type": "function",
     "function": {
       "name": "create-channels-workflow",
-      "description": "Creates one or more Slack channels for a project. Prefer using this workflow whenever new project channels need to be created. Ensure all channel names are valid Slack channel names. This workflow only creates the channels and associates them with the project. If users other than the creator should also be added to the newly created channels, execute add_members_to_channels_workflow after this workflow.",
+      "description": "Creates one or more Slack channels for a project. Prefer using this workflow whenever new project channels need to be created. Ensure all channel names are valid Slack channel names. This workflow only creates the channels and associates them with the project. If users other than the creator should also be added to the newly created channels, execute add_members_to_channels_workflow after this workflow. By default, if it is not explicitly mentioned whether the channels should be private or public, assume they should be private and pass the isPrivate parameter as true.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -385,50 +385,50 @@ const managerAgentWorkflows = [
       }
     }
   },
-  {
-    "type": "function",
-    "function": {
-      "name": "remove-members-from-channels-workflow",
-      "description": "Removes one or more users from project channels. Prefer using this workflow whenever users need to be removed from Slack channels belonging to a project. Always provide Slack member IDs as input. If only email addresses are available, first resolve them using find_users_by_email_tool. This workflow only removes users from the specified channels and does not remove them from the project. If the user also requests removal from the project itself, execute remove_members_from_project_workflow after this workflow.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "projectId": {
-            "type": "string",
-            "description": "Project ID."
-          },
-          "channels": {
-            "type": "array",
-            "description": "Array of channels and the users to remove from each channel.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "channelId": {
-                  "type": "string",
-                  "description": "Slack channel ID."
-                },
-                "userIds": {
-                  "type": "array",
-                  "description": "Array of Slack member IDs to remove from the channel.",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "required": [
-                "channelId",
-                "userIds"
-              ]
-            }
-          }
-        },
-        "required": [
-          "projectId",
-          "channels"
-        ]
-      }
-    }
-  },
+  // {
+  //   "type": "function",
+  //   "function": {
+  //     "name": "remove-members-from-channels-workflow",
+  //     "description": "Removes one or more users from project channels. Prefer using this workflow whenever users need to be removed from Slack channels belonging to a project. Always provide Slack member IDs as input. If only email addresses are available, first resolve them using find_users_by_email_tool. This workflow only removes users from the specified channels and does not remove them from the project. If the user also requests removal from the project itself, execute remove_members_from_project_workflow after this workflow.",
+  //     "parameters": {
+  //       "type": "object",
+  //       "properties": {
+  //         "projectId": {
+  //           "type": "string",
+  //           "description": "Project ID."
+  //         },
+  //         "channels": {
+  //           "type": "array",
+  //           "description": "Array of channels and the users to remove from each channel.",
+  //           "items": {
+  //             "type": "object",
+  //             "properties": {
+  //               "channelId": {
+  //                 "type": "string",
+  //                 "description": "Slack channel ID."
+  //               },
+  //               "userIds": {
+  //                 "type": "array",
+  //                 "description": "Array of Slack member IDs to remove from the channel.",
+  //                 "items": {
+  //                   "type": "string"
+  //                 }
+  //               }
+  //             },
+  //             "required": [
+  //               "channelId",
+  //               "userIds"
+  //             ]
+  //           }
+  //         }
+  //       },
+  //       "required": [
+  //         "projectId",
+  //         "channels"
+  //       ]
+  //     }
+  //   }
+  // },
   {
     "type": "function",
     "function": {

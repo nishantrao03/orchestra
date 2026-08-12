@@ -10,7 +10,7 @@ import memberAgentTools from "../../tools-implementation/documentation/member-ag
  * @param {Array<Object>} params.messages - The conversation history.
  * @returns {Promise<{success: boolean, continueExecution: boolean, message: string, messages: Array<Object>}>} The execution results and updated conversation history.
  */
-export default async function executionAgent({ currentSubtaskText, messages = [] }) {
+export default async function executionAgentExecution({ currentSubtaskText, messages = [] }) {
     try {
         const systemPrompt = executionAgentPrompt();
         const userPrompt = `Please execute the following subtask: "${currentSubtaskText}"`;
@@ -82,7 +82,7 @@ async function testExecutionAgent() {
     const mockMessages = [];
 
     try {
-        const result = await executionAgent({
+        const result = await executionAgentExecution({
             currentSubtaskText: mockSubtaskText,
             messages: mockMessages
         });
@@ -94,4 +94,4 @@ async function testExecutionAgent() {
     }
 }
 
-testExecutionAgent();
+// testExecutionAgent();

@@ -9,7 +9,7 @@ import plannerAgentPrompt from "../../prompts/agents/planner-agent-prompt.js";
  * @param {Array<Object>} state.messages - The conversation history.
  * @returns {Promise<{subtasksArray: Array, messages: Array}>} The generated subtasks and updated state messages.
  */
-export default async function plannerAgent({ userMessage, messages = [] }) {
+export default async function plannerAgentExecution({ userMessage, messages = [] }) {
     try {
         const systemPrompt = plannerAgentPrompt();
         const userPrompt = `Please break down the following task into a logical sequence of subtasks: "${userMessage}"`;
@@ -79,7 +79,7 @@ async function testPlannerAgent() {
     };
 
     try {
-        const result = await plannerAgent(mockState);
+        const result = await plannerAgentExecution(mockState);
         
         if (result && Array.isArray(result.subtasksArray)) {
             console.log("\nTest successful. Extracted JSON Array:");
@@ -95,4 +95,4 @@ async function testPlannerAgent() {
     }
 }
 
-testPlannerAgent();
+// testPlannerAgent();
