@@ -12,19 +12,16 @@ const GraphState = Annotation.Root({
 
     executionAgent: Annotation(),
 
+    handoverTask: Annotation(),
+
     subtasksMetadata: Annotation(),
     currentSubtaskIndex: Annotation(),
-    threadMessages: Annotation(),
+    continueExecution: Annotation(),
+    requiresAtomicTools: Annotation(),
     messages: Annotation(),
-
-    executionPlan: Annotation(), // TBR
 
     prevNode: Annotation(),
     nextNode: Annotation(),
-
-    managerAgentCounter: Annotation(), // TBR
-
-    result: Annotation(), // TBR
 
     finalResponse: Annotation(),
 });

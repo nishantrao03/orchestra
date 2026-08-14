@@ -1,35 +1,47 @@
-import contextAgentExecution from "../agents/context-agent.js";
+import toolsAgentExecution from "../agents/tools-agent.js";
+import { END } from "@langchain/langgraph";
 
-export default async function contextAgent(state) {
-    console.log("Entered Context Agent Node");
+/**
+ * Extracts the current subtask from the graph state, invokes the tools agent, 
+ * and updates the state with execution results, routing flags, and the incremented subtask index.
+ *
+ * @param {Object} state - The current state of the LangGraph execution.
+ * @returns {Promise<Object>} The updated state parameters to be merged into the graph.
+ */
+export default async function toolsAgent(state) {
+    console.log("Entered Tools Agent Node");
 
     try {
-        const response =
-            await contextAgentExecution();
+        const subtasksList = state.subtasksMetadata || [];
+        const currentIndex = state.currentSubtaskIndex || 0;
 
-        const nextNode =
-            Number(
-                response.choices[0].message.content
-                    .trim()
-            );
-
-        switch (nextNode) {
-            case 1:
-                return {
-                    nextNode: "manager-agent",
-                };
-
-            default:
-                throw new Error(
-                    `Invalid Context Agent route: ${nextNode}`
-                );
+        if (currentIndex >= subtasksList.length) {
+            throw new Error(`Subtask index ${currentIndex} is out of bounds.`);
         }
+
+        const currentSubtaskText = subtasksList[currentIndex].subtask;
+
+        const executionResult = await toolsAgentExecution({
+            currentSubtaskText: currentSubtaskText,
+            messages: state.messages,
+        });
+
+        return {
+            messages: executionResult.messages,
+            continueExecution: executionResult.continueExecution,
+            currentSubtaskIndex: currentIndex + 1,
+            prevNode: "tools-agent",
+            nextNode: "manager-orchestrator",
+        };
     } catch (error) {
         console.error(
-            "[CONTEXT AGENT NODE] Execution failed.",
+            "[TOOLS AGENT NODE] Execution failed.",
             error
         );
 
-        throw error;
+        return {
+            nextNode: END,
+            errorDuringExecution: true,
+        };
     }
 }

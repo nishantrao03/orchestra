@@ -1,16 +1,23 @@
+import { END } from "@langchain/langgraph";
+
 export default async function start(state) {
     console.log("Entered Start Node");
 
     try {
         return {
+            prevNode: "start",
             nextNode: "project-router",
         };
     } catch (error) {
         console.error(
-            "[START NODE] Execution failed.",
+            "[start Execution failed]",
             error
         );
 
-        throw error;
+        return {
+            prevNode: "start",
+            nextNode: END,
+            errorDuringExecution: true,
+        };
     }
 }

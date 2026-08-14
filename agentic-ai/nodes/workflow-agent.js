@@ -1,8 +1,10 @@
 import workflowAgentExecution from "../agents/workflow-agent.js";
+import { END } from "@langchain/langgraph";
 
 /**
  * Extracts the current subtask from the graph state, invokes the workflow agent, 
  * and updates the state with execution results, routing flags, and continuation status.
+ * Ensures continuation is maintained and subtask index remains unchanged if atomic tools are required.
  *
  * @param {Object} state - The current state of the LangGraph execution.
  * @returns {Promise<Object>} The updated state parameters to be merged into the graph.
@@ -25,19 +27,32 @@ export default async function workflowAgent(state) {
             messages: state.messages,
         });
 
+        const finalContinueExecution = executionResult.requiresAtomicTools 
+            ? true 
+            : executionResult.continueExecution;
+
+        const nextSubtaskIndex = executionResult.requiresAtomicTools
+            ? currentIndex
+            : currentIndex + 1;
+
         return {
             messages: executionResult.messages,
             requiresAtomicTools: executionResult.requiresAtomicTools,
-            continueExecution: executionResult.continueExecution,
+            continueExecution: finalContinueExecution,
+            currentSubtaskIndex: nextSubtaskIndex,
             prevNode: "workflow-agent",
             nextNode: "manager-orchestrator",
         };
     } catch (error) {
         console.error(
-            "[WORKFLOW AGENT NODE] Execution failed.",
+            "[workflow-agent Execution failed]",
             error
         );
 
-        throw error;
+        return {
+            prevNode: "workflow-agent",
+            nextNode: END,
+            errorDuringExecution: true,
+        };
     }
 }

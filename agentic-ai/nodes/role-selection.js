@@ -19,6 +19,7 @@ export default async function roleSelection(state) {
             return {
                 finalResponse:
                     "You are not authorized to access this project.",
+                prevNode: "role-selection",
                 nextNode: END,
             };
         }
@@ -32,7 +33,8 @@ export default async function roleSelection(state) {
                 return {
                     role: projectMember.role,
                     executionAgent: "member-agent",
-                    nextNode: "member-agent",
+                    prevNode: "role-selection",
+                    nextNode: "member-orchestrator",
                 };
 
             case "manager":
@@ -43,7 +45,8 @@ export default async function roleSelection(state) {
                 return {
                     role: projectMember.role,
                     executionAgent: "manager-agent",
-                    nextNode: "manager-agent",
+                    prevNode: "role-selection",
+                    nextNode: "manager-orchestrator",
                 };
 
             default:
@@ -53,14 +56,16 @@ export default async function roleSelection(state) {
         }
     } catch (error) {
         console.error(
-            `[ROLE SELECTION] Failed to verify access for user ${state.userId} and project ${state.projectId}.`,
+            "[role-selection Execution failed]",
             error
         );
 
         return {
             finalResponse:
                 "Your access to this project could not be verified. Please try again.",
+            prevNode: "role-selection",
             nextNode: END,
+            errorDuringExecution: true,
         };
     }
 }

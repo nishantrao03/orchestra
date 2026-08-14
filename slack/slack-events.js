@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import pkg from '@slack/bolt';
 const { App, ExpressReceiver } = pkg;
 
-import handleAppMention from "./events/message-handler.js";
+import handleAppMention from "./message-handler.js";
 
 // Initialize environment variables to ensure access to secrets immediately upon import
 dotenv.config();

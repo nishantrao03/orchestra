@@ -1,43 +1,46 @@
+import normalAgentExecution from "../agents/normal-agent.js";
 import { END } from "@langchain/langgraph";
 
-import normalAgentExecution from "../agents/normal-agent.js";
-
+/**
+ * Extracts the user message and conversation history from the graph state, invokes the normal agent, 
+ * and conditionally updates the state based on whether the project ID was successfully finalized.
+ *
+ * @param {Object} state - The current state of the LangGraph execution.
+ * @returns {Promise<Object>} The updated state parameters to be merged into the graph.
+ */
 export default async function normalAgent(state) {
     console.log("Entered Normal Agent Node");
 
     try {
-        const response =
-            await normalAgentExecution();
+        const executionResult = await normalAgentExecution({
+            userMessage: state.userMessage,
+            messages: state.messages || [],
+        });
 
-        const nextNode =
-            Number(
-                response.choices[0].message.content
-                    .trim()
-            );
-        
+        const stateUpdate = {
+            messages: executionResult.messages,
+            prevNode: "normal-agent",
+            nextNode: "handover",
+        };
 
-        switch (nextNode) {
-            case 1:
-                return {
-                    nextNode: "handover",
-                };
-
-            case 2:
-                return {
-                    nextNode: END,
-                };
-
-            default:
-                throw new Error(
-                    `Invalid Normal Agent route: ${nextNode}`
-                );
+        if (executionResult.projectID === null) {
+            stateUpdate.finalResponse = executionResult.message;
+        } else {
+            stateUpdate.projectId = executionResult.projectID;
+            stateUpdate.handoverTask = executionResult.handoverTask;
         }
+
+        return stateUpdate;
     } catch (error) {
         console.error(
             "[NORMAL AGENT NODE] Execution failed.",
             error
         );
 
-        throw error;
+        return {
+            prevNode: "normal-agent",
+            nextNode: END,
+            errorDuringExecution: true,
+        };
     }
 }

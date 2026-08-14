@@ -1,4 +1,5 @@
 import executionAgentExecution from "../agents/execution-agent.js";
+import { END } from "@langchain/langgraph";
 
 /**
  * Extracts the current subtask from the graph state, invokes the execution agent, 
@@ -34,10 +35,13 @@ export default async function executionAgent(state) {
         };
     } catch (error) {
         console.error(
-            "[EXECUTION AGENT NODE] Execution failed.",
+            "[execution-agent Execution failed]",
             error
         );
 
-        throw error;
+        return {
+            nextNode: END,
+            errorDuringExecution: true,
+        };
     }
 }

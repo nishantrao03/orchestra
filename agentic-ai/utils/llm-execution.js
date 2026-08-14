@@ -23,7 +23,7 @@ export default async function executeLlm(systemPrompt, userPrompt, tools = null,
         let stateMessages = addUserPromptToMessages(messages, userPrompt);
         let finalResponse = null;
 
-        const MAX_ITERATIONS = 2;
+        const MAX_ITERATIONS = 3;
         let iteration = 0;
 
         while (iteration < MAX_ITERATIONS) {

@@ -1,4 +1,5 @@
 import getProjectId from "../utils/project-router.js";
+import { END } from "@langchain/langgraph";
 
 export default async function projectRouter(state) {
     console.log("[PROJECT ROUTER] Entered Project Router Node.");
@@ -16,6 +17,7 @@ export default async function projectRouter(state) {
 
             return {
                 executionAgent: "normal-agent",
+                prevNode: "project-router",
                 nextNode: "normal-agent",
             };
         }
@@ -26,17 +28,19 @@ export default async function projectRouter(state) {
 
         return {
             projectId,
+            prevNode: "project-router",
             nextNode: "role-selection",
         };
     } catch (error) {
         console.error(
-            `[PROJECT ROUTER] Failed to resolve project for channel ${state.channelId}. Routing to Normal Agent Node.`,
+            "[project-router Execution failed]",
             error
         );
 
         return {
-            executionAgent: "normal-agent",
-            nextNode: "normal-agent",
+            prevNode: "project-router",
+            nextNode: END,
+            errorDuringExecution: true,
         };
     }
 }

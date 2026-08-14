@@ -1,17 +1,30 @@
 import executeLlm from "../utils/llm-execution.js";
 import plannerAgentPrompt from "../../prompts/agents/planner-agent-prompt.js";
+import getManagerAgentPlannerTools from "../../tools-implementation/tool-lists/manager-agent-tools.js";
+import getMemberAgentPlannerTools from "../../tools-implementation/tool-lists/member-agent-tools.js";
 
 /**
- * Evaluates the user's task and breaks it down into actionable subtasks.
+ * Evaluates the user's task and breaks it down into actionable subtasks mapped to available tools.
  *
  * @param {Object} state - The current graph state.
  * @param {string} state.userMessage - The main task provided by the user.
  * @param {Array<Object>} state.messages - The conversation history.
+ * @param {string} state.agent - The identifier of the orchestrator requesting the plan.
  * @returns {Promise<{subtasksArray: Array, messages: Array}>} The generated subtasks and updated state messages.
  */
-export default async function plannerAgentExecution({ userMessage, messages = [] }) {
+export default async function plannerAgentExecution({ userMessage, messages = [], agent }) {
     try {
-        const systemPrompt = plannerAgentPrompt();
+        let plannerTools;
+        
+        if (agent === "manager-orchestrator") {
+            plannerTools = getManagerAgentPlannerTools();
+        } else if (agent === "member-orchestrator") {
+            plannerTools = getMemberAgentPlannerTools();
+        } else {
+            throw new Error(`Invalid agent provided for planner tool selection: ${agent}`);
+        }
+
+        const systemPrompt = plannerAgentPrompt(plannerTools);
         const userPrompt = `Please break down the following task into a logical sequence of subtasks: "${userMessage}"`;
 
         const responseFormat = {
@@ -74,8 +87,9 @@ async function testPlannerAgent() {
     console.log("Running plannerAgent independent test...");
     
     const mockState = {
-        userMessage: "Add abc@domain.com to the project and post a message on the Mosers Official channel regarding him joining as the QA Lead.",
-        messages: []
+        userMessage: "Store this document for the project id pid11 for future retrieval.",
+        messages: [],
+        agent: "manager-orchestrator"
     };
 
     try {

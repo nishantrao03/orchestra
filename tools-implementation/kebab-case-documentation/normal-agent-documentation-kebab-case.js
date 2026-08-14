@@ -1,28 +1,28 @@
 const normalAgentTools = [
-  {
-    "type": "function",
-    "function": {
-      "name": "link-project-to-thread-tool",
-      "description": "Links a Slack thread to a project in the database. Use when a project association needs to be stored for a private DM thread or group chat thread. Do not use for channel conversations. Only use this tool when the request originates from a conversation whose channel ID starts with 'D' or 'G'. Never use this tool when the channel ID starts with 'C'.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "projectId": {
-            "type": "string",
-            "description": "Unique identifier of the project."
-          },
-          "threadId": {
-            "type": "string",
-            "description": "Slack thread identifier."
-          }
-        },
-        "required": [
-          "projectId",
-          "threadId"
-        ]
-      }
-    }
-  },
+  // {
+  //   "type": "function",
+  //   "function": {
+  //     "name": "link-project-to-thread-tool",
+  //     "description": "Links a Slack thread to a project in the database. Use when a project association needs to be stored for a private DM thread or group chat thread. Do not use for channel conversations. Only use this tool when the request originates from a conversation whose channel ID starts with 'D' or 'G'. Never use this tool when the channel ID starts with 'C'.",
+  //     "parameters": {
+  //       "type": "object",
+  //       "properties": {
+  //         "projectId": {
+  //           "type": "string",
+  //           "description": "Unique identifier of the project."
+  //         },
+  //         "threadId": {
+  //           "type": "string",
+  //           "description": "Slack thread identifier."
+  //         }
+  //       },
+  //       "required": [
+  //         "projectId",
+  //         "threadId"
+  //       ]
+  //     }
+  //   }
+  // },
   {
     "type": "function",
     "function": {

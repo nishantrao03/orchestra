@@ -32,11 +32,15 @@ workflow.addNode("workflow-agent", workflowAgent);
 workflow.addNode("tools-agent", toolsAgent);
 
 workflow.addEdge(START, "start");
-workflow.addEdge("start", "project-router");
-workflow.addEdge("normal-agent", "handover");
-workflow.addEdge("execution-agent", "member-orchestrator");
-workflow.addEdge("workflow-agent", "manager-orchestrator");
-workflow.addEdge("tools-agent", "manager-orchestrator");
+
+workflow.addConditionalEdges(
+    "start",
+    router,
+    {
+        "project-router": "project-router",
+        [END]: END,
+    }
+);
 
 workflow.addConditionalEdges(
     "project-router",
@@ -44,6 +48,16 @@ workflow.addConditionalEdges(
     {
         "normal-agent": "normal-agent",
         "role-selection": "role-selection",
+        [END]: END,
+    }
+);
+
+workflow.addConditionalEdges(
+    "normal-agent",
+    router,
+    {
+        "handover": "handover",
+        [END]: END,
     }
 );
 
@@ -90,11 +104,21 @@ workflow.addConditionalEdges(
 );
 
 workflow.addConditionalEdges(
+    "execution-agent",
+    router,
+    {
+        "member-orchestrator": "member-orchestrator",
+        [END]: END,
+    }
+);
+
+workflow.addConditionalEdges(
     "planner-agent",
     router,
     {
         "member-orchestrator": "member-orchestrator",
         "manager-orchestrator": "manager-orchestrator",
+        [END]: END,
     }
 );
 
@@ -104,6 +128,25 @@ workflow.addConditionalEdges(
     {
         "member-orchestrator": "member-orchestrator",
         "manager-orchestrator": "manager-orchestrator",
+        [END]: END,
+    }
+);
+
+workflow.addConditionalEdges(
+    "workflow-agent",
+    router,
+    {
+        "manager-orchestrator": "manager-orchestrator",
+        [END]: END,
+    }
+);
+
+workflow.addConditionalEdges(
+    "tools-agent",
+    router,
+    {
+        "manager-orchestrator": "manager-orchestrator",
+        [END]: END,
     }
 );
 
