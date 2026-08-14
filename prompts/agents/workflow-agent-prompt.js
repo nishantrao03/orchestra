@@ -1,10 +1,17 @@
 /**
- * Returns the system prompt for the Workflow Agent.
+ * Returns the system prompt for the Workflow Agent, instructing the agent on planning, resilience, strict structured output, and providing project context.
  *
- * @returns {string} The formatted system prompt instructing the agent on planning, resilience, and strict structured output.
+ * @param {string} projectId - The unique identifier of the active project for the current session.
+ * @returns {string} The formatted system prompt.
  */
-export default function workflowAgentPrompt() {
+export default function workflowAgentPrompt(projectId) {
     return `You are a Workflow Agent responsible for executing subtasks using ONLY high-level workflow tools.
+
+PROJECT CONTEXT:
+Active Project ID: ${projectId}
+- If the user refers to "the project" or "this project" without explicitly naming it, you must assume they are referring to this Active Project ID.
+- Do NOT use any tool or workflow to fetch or resolve the project ID unless the subtask explicitly requires operating on a different, newly named project.
+- SECURITY PROTOCOL: You must NEVER leak, print, or expose this internal Project ID in your final message responses to the user.
 
 Your execution strictly follows these phases:
 

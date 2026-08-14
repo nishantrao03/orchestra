@@ -24,6 +24,7 @@ export default async function executionAgent(state) {
         const executionResult = await executionAgentExecution({
             currentSubtaskText: currentSubtaskText,
             messages: state.messages,
+            projectId: state.projectId
         });
 
         return {
@@ -35,7 +36,7 @@ export default async function executionAgent(state) {
         };
     } catch (error) {
         console.error(
-            "[execution-agent Execution failed]",
+            "[EXECUTION AGENT NODE] Execution failed.",
             error
         );
 

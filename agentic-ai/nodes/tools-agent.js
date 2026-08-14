@@ -24,6 +24,7 @@ export default async function toolsAgent(state) {
         const executionResult = await toolsAgentExecution({
             currentSubtaskText: currentSubtaskText,
             messages: state.messages,
+            projectId: state.projectId
         });
 
         return {

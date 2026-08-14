@@ -19,7 +19,8 @@ export default async function plannerAgent(state) {
         const executionResult = await plannerAgentExecution({
             userMessage: inputMessage,
             messages: state.messages,
-            agent: callerNode
+            agent: callerNode,
+            projectId: state.projectId
         });
 
         let nextNodeTarget;
@@ -42,7 +43,7 @@ export default async function plannerAgent(state) {
         };
     } catch (error) {
         console.error(
-            "[planner-agent Execution failed]",
+            "[PLANNER AGENT NODE] Execution failed.",
             error
         );
 

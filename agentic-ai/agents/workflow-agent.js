@@ -4,15 +4,17 @@ import workflowTools from "../../tools-implementation/documentation/manager-agen
 
 /**
  * Executes a subtask using high-level workflows and evaluates if atomic tool handoff or workflow halting is required.
+ * Incorporates the project ID context into the execution prompt.
  *
  * @param {Object} params - The execution parameters.
  * @param {string} params.currentSubtaskText - The description of the subtask to be executed.
  * @param {Array<Object>} params.messages - The conversation history.
+ * @param {string} params.projectId - The unique identifier of the active project.
  * @returns {Promise<{workflowExecutionSuccess: boolean, requiresAtomicTools: boolean, continueExecution: boolean, message: string, messages: Array<Object>}>} 
  */
-export default async function workflowAgentExecution({ currentSubtaskText, messages = [] }) {
+export default async function workflowAgentExecution({ currentSubtaskText, messages = [], projectId }) {
     try {
-        const systemPrompt = workflowAgentPrompt();
+        const systemPrompt = workflowAgentPrompt(projectId);
         const userPrompt = `Please execute this subtask: "${currentSubtaskText}"`;
 
         const responseFormat = {
@@ -83,15 +85,15 @@ export default async function workflowAgentExecution({ currentSubtaskText, messa
 async function testWorkflowAgentExecution() {
     console.log("Running workflowAgentExecution independent test...");
     
-    // const mockSubtaskText = "For the project with id '5e11abfa-ba68-4ea7-8add-242011c9497b', the user with ID 'U0AC0M1S90W' wants to create the following channels on Slack: spaceship_construction_managers, venus_atmosphere_study_managers, system_control_managers.";
-    const mockSubtaskText = "For the project with id '5e11abfa-ba68-4ea7-8add-242011c9497b', the user with ID 'U0AC0M1S90W' wants to create the following channels on Slack: earth_photos_production, earth_photos_managers.";
-
+    const mockSubtaskText = "For the active project, the user with ID 'U0AC0M1S90W' wants to create the following channels on Slack: earth_photos_production, earth_photos_managers.";
     const mockMessages = [];
+    const mockProjectId = "5e11abfa-ba68-4ea7-8add-242011c9497b";
 
     try {
         const result = await workflowAgentExecution({
             currentSubtaskText: mockSubtaskText,
-            messages: mockMessages
+            messages: mockMessages,
+            projectId: mockProjectId
         });
         
         console.log("\nTest execution finished. Resulting Payload:");

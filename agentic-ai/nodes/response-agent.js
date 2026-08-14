@@ -15,6 +15,7 @@ export default async function responseAgent(state) {
         const executionResult = await responseAgentExecution({
             userMessage: state.userMessage,
             messages: state.messages || [],
+            projectId: state.projectId
         });
 
         let nextNodeTarget = state.prevNode;
@@ -32,7 +33,7 @@ export default async function responseAgent(state) {
         };
     } catch (error) {
         console.error(
-            "[response-agent Execution failed]",
+            "[RESPONSE AGENT NODE] Execution failed.",
             error
         );
 

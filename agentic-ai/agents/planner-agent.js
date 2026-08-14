@@ -5,14 +5,16 @@ import getMemberAgentPlannerTools from "../../tools-implementation/tool-lists/me
 
 /**
  * Evaluates the user's task and breaks it down into actionable subtasks mapped to available tools.
+ * Incorporates the project ID context into the planning prompt.
  *
- * @param {Object} state - The current graph state.
- * @param {string} state.userMessage - The main task provided by the user.
- * @param {Array<Object>} state.messages - The conversation history.
- * @param {string} state.agent - The identifier of the orchestrator requesting the plan.
+ * @param {Object} params - The execution parameters.
+ * @param {string} params.userMessage - The main task provided by the user.
+ * @param {Array<Object>} params.messages - The conversation history.
+ * @param {string} params.agent - The identifier of the orchestrator requesting the plan.
+ * @param {string} params.projectId - The unique identifier of the active project.
  * @returns {Promise<{subtasksArray: Array, messages: Array}>} The generated subtasks and updated state messages.
  */
-export default async function plannerAgentExecution({ userMessage, messages = [], agent }) {
+export default async function plannerAgentExecution({ userMessage, messages = [], agent, projectId }) {
     try {
         let plannerTools;
         
@@ -24,7 +26,7 @@ export default async function plannerAgentExecution({ userMessage, messages = []
             throw new Error(`Invalid agent provided for planner tool selection: ${agent}`);
         }
 
-        const systemPrompt = plannerAgentPrompt(plannerTools);
+        const systemPrompt = plannerAgentPrompt(plannerTools, projectId);
         const userPrompt = `Please break down the following task into a logical sequence of subtasks: "${userMessage}"`;
 
         const responseFormat = {
@@ -83,13 +85,17 @@ export default async function plannerAgentExecution({ userMessage, messages = []
     }
 }
 
+/**
+ * Executes an independent test for the plannerAgent function to validate subtask extraction.
+ */
 async function testPlannerAgent() {
     console.log("Running plannerAgent independent test...");
     
     const mockState = {
         userMessage: "Store this document for the project id pid11 for future retrieval.",
         messages: [],
-        agent: "manager-orchestrator"
+        agent: "manager-orchestrator",
+        projectId: "pid11"
     };
 
     try {

@@ -4,15 +4,17 @@ import memberAgentTools from "../../tools-implementation/documentation/member-ag
 
 /**
  * Executes a specific subtask by invoking the LLM with appropriate tools and enforcing a strict JSON response format.
+ * Incorporates the project ID context into the execution prompt.
  *
  * @param {Object} params - The execution parameters.
  * @param {string} params.currentSubtaskText - The description of the subtask to be executed.
  * @param {Array<Object>} params.messages - The conversation history.
+ * @param {string} params.projectId - The unique identifier of the active project.
  * @returns {Promise<{success: boolean, continueExecution: boolean, message: string, messages: Array<Object>}>} The execution results and updated conversation history.
  */
-export default async function executionAgentExecution({ currentSubtaskText, messages = [] }) {
+export default async function executionAgentExecution({ currentSubtaskText, messages = [], projectId }) {
     try {
-        const systemPrompt = executionAgentPrompt();
+        const systemPrompt = executionAgentPrompt(projectId);
         const userPrompt = `Please execute the following subtask: "${currentSubtaskText}"`;
 
         const responseFormat = {
@@ -78,13 +80,15 @@ export default async function executionAgentExecution({ currentSubtaskText, mess
 async function testExecutionAgent() {
     console.log("Running executionAgent independent test...");
     
-    const mockSubtaskText = "For project id '5e11abfa-ba68-4ea7-8add-242011c9497b', please find when is the last date of submission.";
+    const mockSubtaskText = "For the active project, please find when is the last date of submission.";
     const mockMessages = [];
+    const mockProjectId = "5e11abfa-ba68-4ea7-8add-242011c9497b";
 
     try {
         const result = await executionAgentExecution({
             currentSubtaskText: mockSubtaskText,
-            messages: mockMessages
+            messages: mockMessages,
+            projectId: mockProjectId
         });
         
         console.log("\nTest execution finished. Resulting Payload:");

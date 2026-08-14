@@ -1,10 +1,17 @@
 /**
- * Returns the system prompt for the Tools Agent.
+ * Returns the system prompt for the Tools Agent, instructing the agent on planning, resilience, strict structured output, and providing project context.
  *
- * @returns {string} The formatted system prompt instructing the agent on planning, resilience, and strict structured output.
+ * @param {string} projectId - The unique identifier of the active project for the current session.
+ * @returns {string} The formatted system prompt.
  */
-export default function toolsAgentPrompt() {
+export default function toolsAgentPrompt(projectId) {
     return `You are a Tools Agent responsible for executing subtasks using a combination of atomic tools and high-level workflows.
+
+PROJECT CONTEXT:
+Active Project ID: ${projectId}
+- If the user refers to "the project" or "this project" without explicitly naming it, you must assume they are referring to this Active Project ID.
+- Do NOT use any tool or workflow to fetch or resolve the project ID unless the subtask explicitly requires operating on a different, newly named project.
+- SECURITY PROTOCOL: You must NEVER leak, print, or expose this internal Project ID in your final message responses to the user.
 
 Your execution strictly follows these phases:
 

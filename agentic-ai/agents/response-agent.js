@@ -3,15 +3,17 @@ import responseAgentPrompt from "../../prompts/agents/response-agent-prompt.js";
 
 /**
  * Executes the response agent workflow to formulate a concise, user-facing summary of the execution trajectory.
+ * Incorporates the project ID context into the summarization prompt.
  *
  * @param {Object} params - The execution parameters.
  * @param {string} params.userMessage - The original message provided by the user.
  * @param {Array<Object>} params.messages - The conversation history containing the execution trajectory.
+ * @param {string} params.projectId - The unique identifier of the active project.
  * @returns {Promise<{response: string, messages: Array<Object>}>} 
  */
-export default async function responseAgentExecution({ userMessage, messages = [] }) {
+export default async function responseAgentExecution({ userMessage, messages = [], projectId }) {
     try {
-        const systemPrompt = responseAgentPrompt();
+        const systemPrompt = responseAgentPrompt(projectId);
         const userPrompt = `Please review the execution trajectory for the original user request: "${userMessage}". Based on the actions taken and recorded in the conversation history, formulate the final user-facing response.`;
 
         const result = await executeLlm(
@@ -48,11 +50,12 @@ export default async function responseAgentExecution({ userMessage, messages = [
 async function testResponseAgentExecution() {
     console.log("Running responseAgentExecution independent test...");
     
-    const mockUserMessage = "For the project with id 'projectid1', remove the user abc@xyz.com from every channel that he is a part of. Also remove him from the project.";
+    const mockUserMessage = "For the active project, remove the user abc@xyz.com from every channel that he is a part of. Also remove him from the project.";
+    const mockProjectId = "projectid1";
     const mockMessages = [
     {
         role: 'user',
-        content: "For the project with id 'projectid1', remove the user abc@xyz.com from every channel that he is a part of. Also remove him from the project."
+        content: "For the active project, remove the user abc@xyz.com from every channel that he is a part of. Also remove him from the project."
     },
     {
         role: 'assistant',
@@ -95,7 +98,8 @@ async function testResponseAgentExecution() {
     try {
         const result = await responseAgentExecution({
             userMessage: mockUserMessage,
-            messages: mockMessages
+            messages: mockMessages,
+            projectId: mockProjectId
         });
         
         console.log("\nTest execution finished. Resulting Payload:");

@@ -4,15 +4,17 @@ import managerAgentTools from "../../tools-implementation/documentation/manager-
 
 /**
  * Executes a subtask using atomic tools and workflows, returning structured success and continuation states.
+ * Incorporates the project ID context into the execution prompt.
  *
  * @param {Object} params - The execution parameters.
  * @param {string} params.currentSubtaskText - The description of the subtask to be executed.
  * @param {Array<Object>} params.messages - The conversation history.
+ * @param {string} params.projectId - The unique identifier of the active project.
  * @returns {Promise<{toolsExecutionSuccess: boolean, continueExecution: boolean, message: string, messages: Array<Object>}>} 
  */
-export default async function toolsAgentExecution({ currentSubtaskText, messages = [] }) {
+export default async function toolsAgentExecution({ currentSubtaskText, messages = [], projectId }) {
     try {
-        const systemPrompt = toolsAgentPrompt();
+        const systemPrompt = toolsAgentPrompt(projectId);
         const userPrompt = `Please execute this subtask: "${currentSubtaskText}"`;
 
         const responseFormat = {
@@ -78,13 +80,15 @@ export default async function toolsAgentExecution({ currentSubtaskText, messages
 async function testToolsAgentExecution() {
     console.log("Running toolsAgentExecution independent test...");
     
-    const mockSubtaskText = "Hello, can you please summarize the content of this file for me? https://files.slack.com/files-pri/T0ABZA0JHHT-F0B9R6URVMG/download/project_guidelines.pdf";
+    const mockSubtaskText = "Hello, can you please summarize the content of this file for the active project? https://files.slack.com/files-pri/T0ABZA0JHHT-F0B9R6URVMG/download/project_guidelines.pdf";
     const mockMessages = [];
+    const mockProjectId = "projectid1";
 
     try {
         const result = await toolsAgentExecution({
             currentSubtaskText: mockSubtaskText,
-            messages: mockMessages
+            messages: mockMessages,
+            projectId: mockProjectId
         });
         
         console.log("\nTest execution finished. Resulting Payload:");

@@ -25,6 +25,7 @@ export default async function workflowAgent(state) {
         const executionResult = await workflowAgentExecution({
             currentSubtaskText: currentSubtaskText,
             messages: state.messages,
+            projectId: state.projectId
         });
 
         const finalContinueExecution = executionResult.requiresAtomicTools 
@@ -45,7 +46,7 @@ export default async function workflowAgent(state) {
         };
     } catch (error) {
         console.error(
-            "[workflow-agent Execution failed]",
+            "[WORKFLOW AGENT NODE] Execution failed.",
             error
         );
 
